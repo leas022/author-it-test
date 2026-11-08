@@ -54,5 +54,16 @@ namespace AuthorIt.Controllers
 
             return Ok(updateResponse.Topic);
         }
+
+        [HttpGet("{id}/usage")]
+        public ActionResult<TopicUsageResponse> GetTopicUsage(int id)
+        {
+            var usage = _topicsService.GetTopicUsage(id);
+            if (usage == null)
+            {
+                return NotFound();
+            }
+            return Ok(usage);
+        }
     }
 }

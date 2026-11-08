@@ -63,6 +63,43 @@ namespace AuthorIt.Services
             return new UpdateTopicResponse(true, topic.ToResponse());
         }
 
+        public TopicUsageResponse? GetTopicUsage(int id)
+        {
+            if (!_libraryStore.Topics.TryGetValue(id, out var topic))
+            {
+                return null;
+            }
+
+            var books = _libraryStore.Books.Values
+                .Select(book =>
+                {
+                    var references = book.Contents
+                        .Select((r, index) => new { Reference = r, Position = index + 1 })
+                        .Where(x => x.Reference.TopicId == topic.Id)
+                        .Select(x => new ReferenceUsageResponse(
+                            ReferenceId: x.Reference.ReferenceId,
+                            Level: x.Reference.Level,
+                            Position: x.Position))
+                        .ToList();
+
+                    return new BookTopicUsageResponse(
+                        BookId: book.Id,
+                        BookTitle: book.Title,
+                        BookDescription: book.Description,
+                        BookCreated: book.Created,
+                        References: references);
+                })
+                .Where(b => b.References.Count > 0)
+                .ToList();
+
+            return new TopicUsageResponse(
+                TopicId: topic.Id,
+                TopicTitle: topic.Title,
+                Books: books,
+                TotalReferences: books.Sum(b => b.References.Count),
+                BookCount: books.Count);
+        }
+
 
     }
 }

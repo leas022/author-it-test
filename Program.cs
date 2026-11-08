@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<LibraryStore>();
 builder.Services.AddScoped<TopicsService>();
+builder.Services.AddScoped<BooksService>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();

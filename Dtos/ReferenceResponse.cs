@@ -3,7 +3,7 @@
     public record ReferenceResponse(
         int ReferenceId,
         int TopicId,
-        int TopicTitle,
+        string TopicTitle,
         int Level,
         int Position
     );
