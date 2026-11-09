@@ -67,7 +67,7 @@ namespace AuthorIt.Controllers
             {
                 return Problem(statusCode: StatusCodes.Status409Conflict,
                     title: "Topic update conflict",
-                    detail: "The topic has been modified by another user. Please refresh and try again.");
+                    detail: "The topic has been modified by another user.");
             }
 
             return Ok(updateResponse.Topic);

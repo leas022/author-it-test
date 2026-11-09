@@ -166,7 +166,6 @@ namespace AuthorIt.Services
             }
 
             var parentLevel = book.Contents[startIndex].Level;
-            var removeCount = 1;
 
             for (int i = startIndex + 1; i < book.Contents.Count; i++)
             {
@@ -176,10 +175,11 @@ namespace AuthorIt.Services
                     break;
                 }
 
-                removeCount++;
+                // Keep descendants and promote the whole subtree by one level.
+                book.Contents[i].Level--;
             }
 
-            book.Contents.RemoveRange(startIndex, removeCount);
+            book.Contents.RemoveAt(startIndex);
 
             return new DeleteReferenceResponse(DeleteReferenceStatus.Success, GetById(bookId));
         }
