@@ -32,7 +32,7 @@ namespace AuthorIt.Data
                 new Reference { ReferenceId = GetNextReferenceId(), TopicId = 3, Level = 2 },
                 new Reference { ReferenceId = GetNextReferenceId(), TopicId = 4, Level = 1 }
             ]);
-            AddBook(" Publishing Handbook", [
+            AddBook("Publishing Handbook", [
                 new Reference { ReferenceId = GetNextReferenceId(), TopicId = 1, Level = 1 },
                 new Reference { ReferenceId = GetNextReferenceId(), TopicId = 5, Level = 1 },
                 new Reference { ReferenceId = GetNextReferenceId(), TopicId = 4, Level = 2 }

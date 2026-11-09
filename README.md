@@ -60,7 +60,7 @@ Books store a flat ordered list of references with a separate `referenceId` for 
 
 React and TypeScript match the preferred stack in the brief. Vite provides the development server and build, React Router handles pages, and TanStack Query manages fetched server state. Local React state holds editable form values and the saved baseline, allowing unsaved-change detection and preserving edits after a rejected save.
 
-Orval generates the client from the C# OpenAPI contract to reduce duplicated request/response types. Successful mutations invalidate cached queries; query data has `staleTime: 0`, allowing refetches when views mount or regain focus. This keeps outlines and reuse information current after edits without maintaining a separate global state store. It is not live push synchronization between users.
+Orval generates the client from the C# OpenAPI contract to reduce duplicated request/response types. Successful mutations invalidate cached queries; query data has `staleTime: 0`, allowing refetches when views mount or regain focus. This keeps outlines and reuse information current after edits without maintaining a separate global state store.
 
 Tags are entered as comma-separated values, trimmed and converted to an array. Filtering happens in the browser, which is suitable for this small dataset. Styling uses custom CSS with Tailwind, Lucide icons, and react-toastify notifications.
 
@@ -83,7 +83,7 @@ All endpoints use the `/api` prefix:
 
 Creation uses `201 Created` and a `Location` header. For reference creation, that location is the containing book because no standalone reference GET endpoint exists. Updates and reference deletion return `200` with the resulting resource instead of `204`, giving the client the current state immediately.
 
-Controller errors use Problem Details (`application/problem+json`), with `type`, `title`, and `status`, plus `detail` where appropriate. Validation errors also include an `errors` dictionary whose values are message arrays.
+Controller errors use Problem Details (`application/problem+json`), with `type`, `title`, and `status`, plus `detail` where appropriate. Validation errors also include an `errors` dictionary whose values are message arrays. Using these build in types makes returning validation errors easier and more consistent than custom error objects.
 
 - **400 Bad Request:** invalid input, including invalid position or hierarchy.
 - **404 Not Found:** a requested book, topic, or reference is missing, including a nonexistent topic supplied when adding a reference. This treats the referenced topic as a missing resource rather than a field-format error.
@@ -93,6 +93,7 @@ Controller errors use Problem Details (`application/problem+json`), with `type`,
 
 **Reference deletion removes only the selected entry.** Entries indented beneath it are kept and promoted by one level. This prevents accidental loss of content when a reference is removed.
 
+If I were to add topic deletion, I would prevent deletion of a topic that is referenced in any book and return a `409 Conflict` error. This avoids dangling references and accidental loss of content.
 ## Service unit tests
 
 Run the xUnit service tests from the repository root:
@@ -102,3 +103,10 @@ dotnet test tests/AuthorIt.Tests/AuthorIt.Tests.csproj
 ```
 
 Each test uses data from a fresh `LibraryStore`.  The tests each focus on one specific aspect of the service logic. Ideally integration tests would be added to cover status codes and input validation.
+
+## Improvements with more time
+If I had more time, I would add the following improvements:
+- Full unit test coverage of all service methods, including edge cases and error conditions. 
+- Integration tests for the API endpoints, including status codes and validation errors.
+- Improve how the frontend handles errors, including displaying a generic message for unexpected errors.
+- Move away from an in memory database to something like SQLite so that data persists and concurrency issues can be handled.
